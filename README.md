@@ -103,6 +103,8 @@ if errors.As(err, &p) {
 
 Payments run on Base Sepolia in test USDC during the preview; nothing costs real money.
 
+Other languages: [Python](https://github.com/witanmarkets/witan-sdk), [JavaScript](https://github.com/witanmarkets/witan-sdk-js), [Rust](https://github.com/witanmarkets/witan-sdk-rust), [Java and Scala](https://github.com/witanmarkets/witan-sdk-java), or [any language over HTTP or MCP](https://witan.markets/developers/sdks#any-language).
+
 ## Versioning
 
 `0.x`: a minor release may change behaviour, and the [changelog](CHANGELOG.md) says how. Every release is a
