@@ -1,0 +1,31 @@
+name: ci
+# Tests on every push and pull request. A release is a tag vX.Y.Z on main: the Go module proxy and
+# pkg.go.dev pick it up from the tag; nothing is published from here and there are no secrets.
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go: ["1.22", "stable"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go }}
+      - run: test -z "$(gofmt -l .)" || { gofmt -l .; exit 1; }
+      - run: go vet ./...
+      - run: go test -race -count=1 ./...
+  proxy:
+    # on a release tag: ask the module proxy for it, so pkg.go.dev lists it within minutes
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -sf "https://proxy.golang.org/github.com/witanmarkets/witan-sdk-go/@v/${GITHUB_REF_NAME}.info"
